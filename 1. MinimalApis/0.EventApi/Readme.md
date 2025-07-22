@@ -1,34 +1,34 @@
-# Intro to Minimal API
+# Introduction to Minimal API
 
-We will create an event API to build on the concept of minimal APIs, The API will help you learn about:
+We will create an event API to build on the concept of minimal APIs. This API will help you learn about:
 
 1. Project structure
-2. Rest API
+2. REST API
 3. CRUD Functionality
 
-We will use In-memory database for now meaning the data will not be permanently saved into the Database. On a start of the application it will clear any prevous data. We shall later connect to Microsoft SQL server
+We will use an in-memory database for now, meaning the data will not be permanently saved to the database. When the application starts, it will clear any previous data. We will later connect to Microsoft SQL Server.
 
 **Requirements**
 
-1. Code Editor - Visual stiudio is preffered
-2. Fundamental concepts on C# language
-3. Readyness to learn🙂
+1. Code Editor - Visual Studio is preferred
+2. Fundamental concepts of C# language
+3. Readiness to learn 🙂
 
-## step 1: Create an Empty .NET Core project
+## Step 1: Create an Empty .NET Core Project
 
-## step 2: What is included in the project and running the scafolded project
+## Step 2: What is Included in the Project and Running the Scaffolded Project
 
-You should have the following code in ***Program.cs*** file. Program.cs is the entry point of the application and we shall be referrencing to it severally.
+You should have the following code in the ***Program.cs*** file. Program.cs is the entry point of the application, and we will be referencing it several times.
 
 ![1753097002946](image/Readme/1753097002946.png)
 
-- press the keys Ctr + F5 or the run without debugging button to run the application.
-- You should have a browser launched with the ***hello world*** being displayed. This shows that the project configurations looks good.
-- Let break down the scafolded project:
+- Press the keys Ctrl + F5 or click the "Run without debugging" button to run the application.
+- You should have a browser launched with ***Hello World*** being displayed. This shows that the project configuration looks good.
+- Let's break down the scaffolded project:
 
-### **Properties/launchBrowser**
+### **Properties/launchSettings.json**
 
-- This file tells VisualStudio or dotnet run how to launch the app during developement including:
+This file tells Visual Studio or dotnet run how to launch the app during development, including:
 
 * [ ] Ports
 * [ ] Whether a browser should open
@@ -41,83 +41,84 @@ You should have the following code in ***Program.cs*** file. Program.cs is the e
  "$schema": "https://json.schemastore.org/launchsettings.json",
 ```
 
-The above learn  defines the JSON Schema- helps editors like VS code with intellisense and validation
+The above line defines the JSON Schema - this helps editors like VS Code with IntelliSense and validation.
 
 **- Profiles**
 
-- Defines a way to run the application - we got two "http and https"
+Defines a way to run the application - we have two profiles: "http" and "https"
 
 * [ ] ***commandName***: tells dotnet to launch the main project with dotnet run
 * [ ] ***dotnetRunMessages***: shows the usual logs like ("now listening on http://")
-* [ ] ***launchBrowser***: used to auto launch the browser
+* [ ] ***launchBrowser***: used to auto-launch the browser
 * [ ] ***applicationUrl***: Port where the application will be running
-* [ ] ***environmentVariables***: Sets the environment viariables like "Development"
+* [ ] ***environmentVariables***: Sets the environment variables like "Development"
 
-- To avoid having the browser launching everytime you run you project; head to the properties folder and open the *launchSettings.json* file. You should have seen a property called ***launchBrowser: "true"***, turn that to ***launchBrowser: "false"*** for both the profiles (http and https).
+To avoid having the browser launch every time you run your project, head to the Properties folder and open the *launchSettings.json* file. You should see a property called ***launchBrowser: "true"***. Change that to ***launchBrowser: "false"*** for both the profiles (http and https).
 
 ![1753097399085](image/Readme/1753097399085.png)
 
-- The Dependencies folder will hold all the packages we will be installing from [Nuget Package Manager](https://www.nuget.org/)
+The Dependencies folder will hold all the packages we will be installing from [NuGet Package Manager](https://www.nuget.org/)
 
 **What is NuGet?**
 
-- NuGet is the package manager for .NET. The NuGet client tools provide the ability to produce and consume packages. The NuGet Gallery is the central package repository used by all package authors and consumers.
+NuGet is the package manager for .NET. The NuGet client tools provide the ability to produce and consume packages. The NuGet Gallery is the central package repository used by all package authors and consumers.
 
-### Conected Services Folder
+### Connected Services Folder
 
-- The folder provides tooling to connect your application to external services like:
+This folder provides tooling to connect your application to external services like:
 
-* [ ] Web APIS - OpenAPI/Swagger for API calls
-* [ ] gprc services - Add and consume gRPC endpoints
+* [ ] Web APIs - OpenAPI/Swagger for API calls
+* [ ] gRPC services - Add and consume gRPC endpoints
 * [ ] Azure Services - Connect to older SOAP/WCF services
 * [ ] Databases - connect to a database and generate models with EF
 
 ### Program.cs File
 
-This is the entry point of the application. Lets break it down:
+This is the entry point of the application. Let's break it down:
 
-1. var builder = WebApplication.CreateBuilder(args);
+1. **var builder = WebApplication.CreateBuilder(args);**
 
-- used to create ***WebapplicationBuilder* **instance
-- it configures services, logging, evinronment and app settings
+   - Used to create a ***WebApplicationBuilder*** instance
+   - It configures services, logging, environment, and app settings
 
-2. var app = builder.Build();
+2. **var app = builder.Build();**
 
-- This builds the application
-- create ***WebapplicationBuilder* **instance making the app ready to define the endpoinnts and middlewares
+   - This builds the application
+   - Creates a ***WebApplication*** instance, making the app ready to define endpoints and middlewares
 
-3. app.MapGet("/", () => "Hello World!");
+3. **app.MapGet("/", () => "Hello World!");**
 
-- This is where you  **define your first API endpoint** ., whenever you visit the endpoint, it returns "Hello World".
-- **() => "Hello World!** - this is a lamda function that returns a string. Lamda is a concept in C#.
+   - This is where you **define your first API endpoint**. Whenever you visit the endpoint, it returns "Hello World".
+   - **() => "Hello World!"** - this is a lambda function that returns a string. Lambda is a concept in C#.
 
-4. app.Run();
+4. **app.Run();**
 
-- This  **starts the web server** .
+   - This **starts the web server**.
+   - It starts listening for HTTP requests on the specified port(s)
+   - It keeps the application running
 
-* It starts listening for HTTP requests on the specified port(s)
-* It keeps the application running
+## Step 3: Create Models Folder
 
-## step 3: Create Models folder
+Add a folder at the root of the project and name it Models. The Models folder will hold all the entities we will be using. An entity is similar to a table in relational databases.
 
-- Add a folder at the root of the project and name it Models. The models folder will hold all the entities we will be using. An entity is similar to a table in relational databases.
-- Inside the newly created Model Folder, add a class named Event. This will hold the properties of an event.
+Inside the newly created Models folder, add a class named Event. This will hold the properties of an event.
 
 ![1753171415175](image/Readme/1753171415175.png)
 
-- All the fields are made to be public meaning they can be accessed from anywhere from the Application
-- These properties are of different data types which simulates the real world object of an event.
-- The string property has "?" because by default, all strings are nullable.
+- All the fields are made public, meaning they can be accessed from anywhere in the application
+- These properties are of different data types which simulate the real-world object of an event
+- The string property has "?" because by default, all strings are nullable
 
-### Concept of Nullable Refference
+### Concept of Nullable Reference Types
 
-- This is a concept which was introduced in C# 8.0. in older versions of C#, you could not be warned if ther was a potential null value. With the nullable referrence types, C# became more strict and smart by helping you to catch null issues at compile time.
-- ***public string Description { get; set; }** - This means that you garantee that the Description will never be null. If you do not initialize any value the compler will warn you.*
-- ***public string? Description { get; set;** }* - This means that Description can be null. This tells the compliler that it okay if the property is null and it won't warn you.
+This is a concept that was introduced in C# 8.0. In older versions of C#, you could not be warned if there was a potential null value. With nullable reference types, C# became more strict and smart by helping you catch null issues at compile time.
+
+- ***public string Description { get; set; }*** - This means that you guarantee that the Description will never be null. If you do not initialize any value, the compiler will warn you.
+- ***public string? Description { get; set; }*** - This means that Description can be null. This tells the compiler that it's okay if the property is null, and it won't warn you.
 
 #### Turning Nullable ON and OFF
 
-- This behavior is controlled by a setting in the .csproj
+This behavior is controlled by a setting in the .csproj file:
 
 ```xml
 <Nullable>enable</Nullable>
@@ -125,26 +126,26 @@ This is the entry point of the application. Lets break it down:
 
 ![1753172173059](image/Readme/1753172173059.png)
 
-[Read more about Nullable reference](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-reference-types?WT.mc_id=studentamb_244628)
+[Read more about Nullable reference types](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-reference-types?WT.mc_id=studentamb_244628)
 
-### .csproj file
+### .csproj File
 
-This is the important file, its like the heart of the project configuration. It is an XML file that defines:
+This is an important file - it's like the heart of the project configuration. It is an XML file that defines:
 
-* What files are part of the project
-* What dependencies (NuGet packages) are needed
-* What version of .NET to use
-* Build settings, project properties, and more
+- What files are part of the project
+- What dependencies (NuGet packages) are needed
+- What version of .NET to use
+- Build settings, project properties, and more
 
-## step 4: EF Core and DB Context
+## Step 4: EF Core and DB Context
 
-### **Docs/ Resources**
+### **Documentation/Resources**
 
 [Official docs](https://learn.microsoft.com/en-us/ef/core/?WT.mc_id=studentamb_244628 "visit")
 
 [Readme Presentation](https://github.com/kenya-data-platform-user-group/EF-Core-Presentation "visit")
 
-[Youtube Turorial by Nick Chapsas](https://www.youtube.com/watch?v=2t88FOeQ898 "visit")
+[YouTube Tutorial by Nick Chapsas](https://www.youtube.com/watch?v=2t88FOeQ898 "visit")
 
 ### What is EF Core?
 
@@ -154,34 +155,34 @@ EF Core acts as a bridge between **.NET applications** and **databases**, allowi
 
 #### Why EF Core?
 
-**1. Quick Story/Example**
+##### 1. Quick Story/Example
 
 Imagine you're building a .NET application and need to interact with a database. How do you do it efficiently? You could write raw SQL queries, but that can be error-prone and hard to maintain. This is where an ORM (Object-Relational Mapper) like EF Core comes in handy.
 
-**2. How Do We Interact with Databases in .NET?**
+##### 2. How Do We Interact with Databases in .NET?
 
-Before Entity Framework Core (EF Core), developers interacted with databases using **ADO.NET**, **Dapper**, or raw SQL queries. While these approaches provided control and performance, they often required writing a lot of boilerplate code for CRUD operations.
+Before Entity Framework Core (EF Core), developers interacted with databases using **ADO.NET**, **Dapper**, or raw SQL queries. While these approaches provided control and performance, they often required writing a lot of boilerplate code for CRUD operations:
 
-- Open a database connection.
-- Write SQL queries manually.
-- Handle result mappings to objects.
+- Open a database connection
+- Write SQL queries manually
+- Handle result mappings to objects
 - Manage transactions and exceptions explicitly
 
 This process is repetitive and error-prone. This is where **EF Core** comes in.
 
-**4. Why Use EF Core?**
+##### 3. Why Use EF Core?
 
-**a. Simplifies Data Access**
+###### a. Simplifies Data Access
 
 EF Core abstracts database interactions, allowing developers to use **C# objects** instead of SQL queries.
 
-**b. Boosts Productivity**
+###### b. Boosts Productivity
 
-- Eliminates the need to write repetitive SQL queries.
-- Supports **automatic migrations** to handle database schema changes.
-- Works seamlessly with **LINQ queries** for data retrieval.
+- Eliminates the need to write repetitive SQL queries
+- Supports **automatic migrations** to handle database schema changes
+- Works seamlessly with **LINQ queries** for data retrieval
 
-**c. Supports Multiple Databases**
+###### c. Supports Multiple Databases
 
 EF Core is database-agnostic and supports multiple database providers, including:
 
@@ -193,57 +194,57 @@ EF Core is database-agnostic and supports multiple database providers, including
 
 ### Setting Up EF Core
 
-### step 1. Installing database provider
+#### Step 1: Installing Database Provider
 
-In Visual Studio, click on Tools-Nuget Package Manager and search -  ***Microsoft.EntityFrameworkCore.InMemory*** and install in your project.
+In Visual Studio, click on Tools → NuGet Package Manager and search for ***Microsoft.EntityFrameworkCore.InMemory*** and install it in your project.
 
-**This is Entity Framework Core (EF Core) provider** that allows you to use an  **in-memory database** , mainly for  **testing or prototyping** .
+**This is an Entity Framework Core (EF Core) provider** that allows you to use an **in-memory database**, mainly for **testing or prototyping**.
 
 ![1753175412478](image/Readme/1753175412478.png)
 
-#### Limitations
+##### Limitations
 
-* **No relational features** (e.g., foreign keys, joins, transactions).
-* Doesn't always behave the same as real databases like SQL Server.
-* Not suitable for production.
+- **No relational features** (e.g., foreign keys, joins, transactions)
+- Doesn't always behave the same as real databases like SQL Server
+- Not suitable for production
 
-We will later advance to use other database provider.
+We will later advance to use other database providers.
 
-### step 2. Installing EF Core diagonostic
+#### Step 2: Installing EF Core Diagnostics
 
-Search - ***Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore*** and install in your project.
+Search for ***Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore*** and install it in your project.
 
-It provides **developer-friendly error pages** for  **Entity Framework Core-related exceptions** , especially during development like Database Erros, Migration Errors and more..
+It provides **developer-friendly error pages** for **Entity Framework Core-related exceptions**, especially during development, such as database errors, migration errors, and more.
 
 This should **only be used in development** because it exposes detailed error information that could be a security risk in production.
 
 ![1753175682543](image/Readme/1753175682543.png)
 
-#### When to Use
+##### When to Use
 
-* When you want **better debugging support** for EF Core issues during development.
-* In  **educational or training environments** , to help students understand why certain DB errors are happening.
-* When you're building **apps that heavily rely on EF Core** and want improved developer feedback.
+- When you want **better debugging support** for EF Core issues during development
+- In **educational or training environments**, to help students understand why certain DB errors are happening
+- When you're building **apps that heavily rely on EF Core** and want improved developer feedback
 
-We need to register our database provider in Program.cs file but first before that, lets learn about DbContext. 👇
+We need to register our database provider in the Program.cs file, but first, let's learn about DbContext. 👇
 
-## What is Db Context?
+## What is DbContext?
 
-DbContext is the main class in Entity Framwork Core that manages database connections and is used to query and save data.
+DbContext is the main class in Entity Framework Core that manages database connections and is used to query and save data.
 
-Think of this like a bridge between your C# code and your Database.
+Think of this as a bridge between your C# code and your database.
 
-What does it do?
+### What does it do?
 
-* Maps your **C# classes (entities)** to **database tables**
-* Allows you to  **query** ,  **insert** ,  **update** , and **delete** data
-* Tracks changes to your data so it knows what to update in the database
+- Maps your **C# classes (entities)** to **database tables**
+- Allows you to **query**, **insert**, **update**, and **delete** data
+- Tracks changes to your data so it knows what to update in the database
 
-step 3: Create a DbContext class
+#### Step 3: Create a DbContext Class
 
-on the models folder, add a new class and name it AppDbContext.cs
+In the Models folder, add a new class and name it AppDbContext.cs
 
-In the file add the follwing:
+In the file, add the following:
 
 ```csharp
 using Microsoft.EntityFrameworkCore;
@@ -261,25 +262,25 @@ namespace _0.EventApi.Models
 
 ![1753176789869](image/Readme/1753176789869.png)
 
-Breakdown
+### Breakdown
 
-The `AppDbContext` class is a central part of Entity Framework Core (EF Core). It represents a  **session with the database** , allowing you to perform CRUD (Create, Read, Update, Delete) operations using C# classes.
+The `AppDbContext` class is a central part of Entity Framework Core (EF Core). It represents a **session with the database**, allowing you to perform CRUD (Create, Read, Update, Delete) operations using C# classes.
 
 ### Purpose
 
-* Connects the application to the database.
-* Maps your models (e.g., `Event`) to database tables.
-* Enables querying and saving of data.
+- Connects the application to the database
+- Maps your models (e.g., `Event`) to database tables
+- Enables querying and saving of data
 
-| Term                                                      | Description                                                                                      |
+| Term | Description |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| DbContext                                                 | Base class provided by EF Core. It handles database operations and change tracking.              |
-| AppDbContext                                              | Our custom context class inheriting from `DbContext`. We define models here as `DbSet<>`.    |
-| AppDbContext(DbContextOptions `<AppDbContext>` options) | Constructor used to configure the context with settings like the connection string.              |
-| DbSet `<Event>` Events                                  | Represents the `Events` table in the database. You use this to access and query event records. |
-| Set `<Event>`()                                         | Built-in EF Core method that initializes the `DbSet` for a given model type.                   |
+| DbContext | Base class provided by EF Core. It handles database operations and change tracking. |
+| AppDbContext | Our custom context class inheriting from `DbContext`. We define models here as `DbSet<>`. |
+| AppDbContext(DbContextOptions `<AppDbContext>` options) | Constructor used to configure the context with settings like the connection string. |
+| DbSet `<Event>` Events | Represents the `Events` table in the database. You use this to access and query event records. |
+| Set `<Event>`() | Built-in EF Core method that initializes the `DbSet` for a given model type. |
 
-step 4: Register the context in ***Program.cs***
+#### Step 4: Register the Context in ***Program.cs***
 
 Add the following:
 
@@ -290,15 +291,15 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 ![1753177840347](image/Readme/1753177840347.png)
 
-This first line registers the `AppDbContext` with the application's  **dependency injection (DI) container** , and configures it to use an **in-memory database** called `"EventDb"`.
+The first line registers the `AppDbContext` with the application's **dependency injection (DI) container** and configures it to use an **in-memory database** called `"EventDb"`.
 
-The second line adds a special **developer-friendly error page** that shows detailed database-related exceptions when running the app in  **development mode** .
+The second line adds a special **developer-friendly error page** that shows detailed database-related exceptions when running the app in **development mode**.
 
-* Helps you see detailed errors if something goes wrong with EF Core (e.g., migrations or invalid queries).
-* Makes debugging database issues easier during development.
-* Only shows detailed errors when `ASPNETCORE_ENVIRONMENT=Development`.
+- Helps you see detailed errors if something goes wrong with EF Core (e.g., migrations or invalid queries)
+- Makes debugging database issues easier during development
+- Only shows detailed errors when `ASPNETCORE_ENVIRONMENT=Development`
 
-The usage is possible because of it is made available by Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore package.
+This usage is possible because it is made available by the Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore package.
 
 ### **DbContext Flow**
 
@@ -348,24 +349,24 @@ public class EventsController : ControllerBase
 
 ![1753185534393](image/Readme/1753185534393.png)
 
-**Terms to remember**
+### Terms to Remember
 
-| Term              | Meaning                                                         |
+| Term | Meaning |
 | ----------------- | --------------------------------------------------------------- |
-| Dependency        | An object a class depends on (e.g.,`AppDbContext`)            |
-| Injection         | Supplying the dependency from outside                           |
-| Service Container | Built-in system in .NET core that holds all registered services |
-| Register          | Telling the container how to create a dependency                |
-| Resolve           | The container gives you the dependency when needed              |
+| Dependency | An object a class depends on (e.g., `AppDbContext`) |
+| Injection | Supplying the dependency from outside |
+| Service Container | Built-in system in .NET Core that holds all registered services |
+| Register | Telling the container how to create a dependency |
+| Resolve | The container gives you the dependency when needed |
 
-### Summary:
+### Summary
 
-**How  does AppDbContext works with Program.cs?**
+**How does AppDbContext work with Program.cs?**
 
-- AppDbContext tells EF that you want to work with a table of Event objects (A database table)
-- Program.cs registers AppDbContext with the built-in Dependancy Injection (DI). This tells the app that "Wehenever someone need ***AppDbContext***, give then an instance that uses an In-memory database called ***EventDb***"
-- InMerory database is used for testing and learning as it acts as a fake database stores in memory (RAM), so no actual SQL server.
-- When program.cs registers AppDbContext, you can inject it in any part of your application. We will explore about this when we will be writing CRUD operations of our Minimal API.
+- AppDbContext tells EF that you want to work with a table of Event objects (a database table)
+- Program.cs registers AppDbContext with the built-in Dependency Injection (DI). This tells the app that "Whenever someone needs ***AppDbContext***, give them an instance that uses an in-memory database called ***EventDb***"
+- In-memory database is used for testing and learning as it acts as a fake database stored in memory (RAM), so no actual SQL server is needed
+- When Program.cs registers AppDbContext, you can inject it in any part of your application. We will explore this when we write CRUD operations of our Minimal API
 
 ## step 5: CRUD Operations FOR rest API
 
