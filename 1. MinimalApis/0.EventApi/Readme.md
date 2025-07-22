@@ -193,16 +193,42 @@ EF Core is database-agnostic and supports multiple database providers, including
 
 ### Setting Up EF Core
 
-**Installing EF Core**
 
-To install EF Core in your .NET project, run the following command in your terminal:
-In visual studio code
+### step 1. Installing database provider
 
-```bash
-dotnet add package Microsoft.EntityFrameworkCore
-```
+In Visual Studio, click on Tools-Nuget Package Manager and search -  ***Microsoft.EntityFrameworkCore.InMemory*** and install in your project.
 
-In Visual Studio, click on Tools-Nuget Package Manager and search - **Microsoft.EntityFrameworkCore** and install
+**This is Entity Framework Core (EF Core) provider** that allows you to use an  **in-memory database** , mainly for  **testing or prototyping** .
+
+![1753175412478](image/Readme/1753175412478.png)
+
+
+
+#### Limitations
+
+* **No relational features** (e.g., foreign keys, joins, transactions).
+* Doesn't always behave the same as real databases like SQL Server.
+* Not suitable for production.
+
+We will later advance to use other database provider.
+
+### step 2. Installing EF Core diagonostic
+
+Search - ***Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore*** and install in your project.
+
+It provides **developer-friendly error pages** for  **Entity Framework Core-related exceptions** , especially during development like Database Erros, Migration Errors and more..
+
+This should **only be used in development** because it exposes detailed error information that could be a security risk in production.
+
+![1753175682543](image/Readme/1753175682543.png)
+
+#### When to Use
+
+* When you want **better debugging support** for EF Core issues during development.
+* In  **educational or training environments** , to help students understand why certain DB errors are happening.
+* When you're building **apps that heavily rely on EF Core** and want improved developer feedback.
+
+We need to register our database provider in Program.cs file but first before that, lets learn about DbContext. 👇
 
 ## What is Db Context?
 
@@ -215,6 +241,84 @@ What does it do?
 * Maps your **C# classes (entities)** to **database tables**
 * Allows you to  **query** ,  **insert** ,  **update** , and **delete** data
 * Tracks changes to your data so it knows what to update in the database
+
+step 3: Create a DbContext class
+
+on the models folder, add a new class and name it AppDbContext.cs
+
+In the file add the follwing:
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+namespace _0.EventApi.Models
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        { }
+        public DbSet<Event> Events => Set<Event>();
+    }
+}
+```
+
+
+![1753176789869](image/Readme/1753176789869.png)
+
+Breakdown
+
+The `AppDbContext` class is a central part of Entity Framework Core (EF Core). It represents a  **session with the database** , allowing you to perform CRUD (Create, Read, Update, Delete) operations using C# classes.
+
+### Purpose
+
+* Connects the application to the database.
+* Maps your models (e.g., `Event`) to database tables.
+* Enables querying and saving of data.
+
+| Term                                                      | Description                                                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| DbContext                                                 | Base class provided by EF Core. It handles database operations and change tracking.              |
+| AppDbContext                                              | Our custom context class inheriting from `DbContext`. We define models here as `DbSet<>`.    |
+| AppDbContext(DbContextOptions `<AppDbContext>` options) | Constructor used to configure the context with settings like the connection string.              |
+| DbSet `<Event>` Events                                  | Represents the `Events` table in the database. You use this to access and query event records. |
+| Set `<Event>`()                                         | Built-in EF Core method that initializes the `DbSet` for a given model type.                   |
+
+step 4: Register the context in ***Program.cs***
+
+Add the following:
+
+```csharp
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+```
+
+
+
+![1753177840347](image/Readme/1753177840347.png)
+
+This first line registers the `AppDbContext` with the application's  **dependency injection (DI) container** , and configures it to use an **in-memory database** called `"EventDb"`.
+
+The second line adds a special **developer-friendly error page** that shows detailed database-related exceptions when running the app in  **development mode** .
+
+* Helps you see detailed errors if something goes wrong with EF Core (e.g., migrations or invalid queries).
+* Makes debugging database issues easier during development.
+* Only shows detailed errors when `ASPNETCORE_ENVIRONMENT=Development`.
+
+The usage is possible because of it is made available by Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore package. 
+
+
+Summary:
+
+How  does AppDbContext works with Program.cs?
+
+AppDbContext tells EF that you want to work with a table of Event objects (A database table)
+
+Program.cs registers AppDbContext with the built-in Dependancy Injection (DI). This tells the app that "Wehenever someone need ***AppDbContext***, give then an instance that uses an In-memory database called ***EventDb***"
+
+InMerory database is used for testing and learning as it acts as a fake database stores in memory (RAM), so no actual SQL server.
+
+When program.cs registers AppDbContext, you can inject it in any part of your application. We will explore about this when we will be writing CRUD operations of our Minimal API.
+
 
 ## step 5: CRUD Operations FOR rest API
 
