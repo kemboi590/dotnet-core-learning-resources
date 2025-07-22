@@ -193,7 +193,6 @@ EF Core is database-agnostic and supports multiple database providers, including
 
 ### Setting Up EF Core
 
-
 ### step 1. Installing database provider
 
 In Visual Studio, click on Tools-Nuget Package Manager and search -  ***Microsoft.EntityFrameworkCore.InMemory*** and install in your project.
@@ -201,8 +200,6 @@ In Visual Studio, click on Tools-Nuget Package Manager and search -  ***Microsof
 **This is Entity Framework Core (EF Core) provider** that allows you to use an  **in-memory database** , mainly for  **testing or prototyping** .
 
 ![1753175412478](image/Readme/1753175412478.png)
-
-
 
 #### Limitations
 
@@ -262,7 +259,6 @@ namespace _0.EventApi.Models
 }
 ```
 
-
 ![1753176789869](image/Readme/1753176789869.png)
 
 Breakdown
@@ -292,8 +288,6 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDataba
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 ```
 
-
-
 ![1753177840347](image/Readme/1753177840347.png)
 
 This first line registers the `AppDbContext` with the application's  **dependency injection (DI) container** , and configures it to use an **in-memory database** called `"EventDb"`.
@@ -304,10 +298,63 @@ The second line adds a special **developer-friendly error page** that shows deta
 * Makes debugging database issues easier during development.
 * Only shows detailed errors when `ASPNETCORE_ENVIRONMENT=Development`.
 
-The usage is possible because of it is made available by Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore package. 
+The usage is possible because of it is made available by Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore package.
+
+## Concept of dependency injection (DI)
+
+**Dependency Injection (DI)** is a software design pattern that helps us **provide objects (dependencies)** that a class needs,  **without creating them manually inside the class** .
+
+**Think of it like this: 🤔**
+
+If a class needs a tool (like a hammer), instead of building the hammer itself, someone gives it the hammer ready to use.
+
+**Why Use DI?**
+
+* Keeps code clean and testable
+* Reduces duplication
+* Follows the principle of loose coupling (classes depend on  *abstractions* , not on  *concrete implementations* )
+
+**How it works in .NET Core**
+
+ASP .NET Core has built-in DI Container. Just the same way we registered the DbContext, the DI tells the system "When someone asks for an `AppDbContext`, here’s how to create it."
+
+Later, when your app needs that `AppDbContext` in a class (e.g., a controller or service), you don’t create it manually — the system  **automatically injects it for you** .
+
+An example is registering AppDbContext with the InMemory Database. It will register **AppDbContext** as a service. It then tells the system to use in-memory database when creating AppDbContext.
+
+Later when we shall be creating a class, here how the DI is injected.
+
+```csharp
+public class EventsController : ControllerBase
+{
+    private readonly AppDbContext _context;
+
+    public EventsController(AppDbContext context)
+    {
+        _context = context; // <-- Injected automatically from the container
+    }
+
+    // Now you can use _context.Events to access your database
+}
+
+```
+
+You do not have to use **"new AppDbContext(...)"** because the framwork injected it automatically.
+
+![1753185534393](image/Readme/1753185534393.png)
 
 
-Summary:
+**Terms to remember**
+
+| Term              | Meaning                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| Dependency        | An object a class depends on (e.g.,`AppDbContext`)            |
+| Injection         | Supplying the dependency from outside                           |
+| Service Container | Built-in system in .NET core that holds all registered services |
+| Register          | Telling the container how to create a dependency                |
+| Resolve           | The container gives you the dependency when needed              |
+
+### Summary:
 
 How  does AppDbContext works with Program.cs?
 
@@ -318,7 +365,6 @@ Program.cs registers AppDbContext with the built-in Dependancy Injection (DI). T
 InMerory database is used for testing and learning as it acts as a fake database stores in memory (RAM), so no actual SQL server.
 
 When program.cs registers AppDbContext, you can inject it in any part of your application. We will explore about this when we will be writing CRUD operations of our Minimal API.
-
 
 ## step 5: CRUD Operations FOR rest API
 
