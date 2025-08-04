@@ -6,9 +6,14 @@ We will create an event API to build on the concept of minimal APIs. This API wi
 2. REST API
 3. CRUD Functionality
 
-We will use an in-memory database for now, meaning the data will not be permanently saved to the database. When the application starts, it will clear any previous data. We will later connect to Microsoft SQL Server.
+We will use an in-memory database for now, meaning the data will not be permanently saved to the database. When the a### How it Works in .NET Core
 
-**Requirements**
+- ASP.NET Core has a built-in DI Container. Just the same way we registered the DbContext, the DI tells the system "When someone asks for an `AppDbContext`, here's how to create it."
+- Later, when your app needs that `AppDbContext` in a class (e.g., a controller or service), you don't create it manually — the system **automatically injects it for you**.
+- An example is registering AppDbContext with the In-Memory Database. It will register **AppDbContext** as a service. It then tells the system to use an in-memory database when creating AppDbContext.
+- Later, when we create a class, here's how the DI is injected:tion starts, it will clear any previous data. We will later connect to Microsoft SQL Server.
+
+## Requirements
 
 1. Code Editor - Visual Studio is preferred
 2. Fundamental concepts of C# language
@@ -30,12 +35,12 @@ You should have the following code in the ***Program.cs*** file. Program.cs is t
 
 This file tells Visual Studio or dotnet run how to launch the app during development, including:
 
-* [ ] Ports
-* [ ] Whether a browser should open
-* [ ] Environment variables
-* [ ] HTTPS or HTTP settings
+- [ ] Ports
+- [ ] Whether a browser should open
+- [ ] Environment variables
+- [ ] HTTPS or HTTP settings
 
-**- Schema**
+#### Schema
 
 ```json
  "$schema": "https://json.schemastore.org/launchsettings.json",
@@ -43,15 +48,15 @@ This file tells Visual Studio or dotnet run how to launch the app during develop
 
 The above line defines the JSON Schema - this helps editors like VS Code with IntelliSense and validation.
 
-**- Profiles**
+#### Profiles
 
 Defines a way to run the application - we have two profiles: "http" and "https"
 
-* [ ] ***commandName***: tells dotnet to launch the main project with dotnet run
-* [ ] ***dotnetRunMessages***: shows the usual logs like ("now listening on http://")
-* [ ] ***launchBrowser***: used to auto-launch the browser
-* [ ] ***applicationUrl***: Port where the application will be running
-* [ ] ***environmentVariables***: Sets the environment variables like "Development"
+- [ ] ***commandName***: tells dotnet to launch the main project with dotnet run
+- [ ] ***dotnetRunMessages***: shows the usual logs like ("now listening on http://")
+- [ ] ***launchBrowser***: used to auto-launch the browser
+- [ ] ***applicationUrl***: Port where the application will be running
+- [ ] ***environmentVariables***: Sets the environment variables like "Development"
 
 To avoid having the browser launch every time you run your project, head to the Properties folder and open the *launchSettings.json* file. You should see a property called ***launchBrowser: "true"***. Change that to ***launchBrowser: "false"*** for both the profiles (http and https).
 
@@ -67,10 +72,10 @@ NuGet is the package manager for .NET. The NuGet client tools provide the abilit
 
 This folder provides tooling to connect your application to external services like:
 
-* [ ] Web APIs - OpenAPI/Swagger for API calls
-* [ ] gRPC services - Add and consume gRPC endpoints
-* [ ] Azure Services - Connect to older SOAP/WCF services
-* [ ] Databases - connect to a database and generate models with EF
+- [ ] Web APIs - OpenAPI/Swagger for API calls
+- [ ] gRPC services - Add and consume gRPC endpoints
+- [ ] Azure Services - Connect to older SOAP/WCF services
+- [ ] Databases - connect to a database and generate models with EF
 
 ### Program.cs File
 
@@ -302,19 +307,19 @@ This usage is possible because it is made available by the Microsoft.AspNetCore.
 
 ![1753188933730](image/Readme/1753188933730.png)
 
-## Concept of dependency injection (DI)
+## Concept of Dependency Injection (DI)
 
 **Dependency Injection (DI)** is a software design pattern that helps us **provide objects (dependencies)** that a class needs,  **without creating them manually inside the class** .
 
-**Think of it like this: 🤔**
+### Think of it like this 🤔
 
 If a class needs a tool (like a hammer), instead of building the hammer itself, someone gives it the hammer ready to use.
 
-**Why Use DI?**
+### Why Use DI?
 
-* Keeps code clean and testable
-* Reduces duplication
-* Follows the principle of loose coupling (classes depend on  *abstractions* , not on  *concrete implementations* )
+- Keeps code clean and testable
+- Reduces duplication
+- Follows the principle of loose coupling (classes depend on *abstractions*, not on *concrete implementations*)
 
 **How it works in .NET Core**
 
@@ -361,11 +366,11 @@ public class EventsController : ControllerBase
 - In-memory database is used for testing and learning as it acts as a fake database stored in memory (RAM), so no actual SQL server is needed
 - When Program.cs registers AppDbContext, you can inject it in any part of your application. We will explore this when we write CRUD operations of our Minimal API
 
-## step 5: CRUD Operations For Rest API
+## Step 5: CRUD Operations for REST API
 
-We shall now proceed to write CRUD operations for an Event API. The aim is to have to Create, Read, Update and Delete. Once we have these foundations it will be much easier to grasp more concepts.
+We will now proceed to write CRUD operations for an Event API. The aim is to Create, Read, Update, and Delete. Once we have these foundations, it will be much easier to grasp more concepts.
 
-Just after **builder.Build();** you should have the following source code.
+Just after **builder.Build();** you should have the following source code:
 
 ```csharp
 //create an event
@@ -423,11 +428,11 @@ app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
 
 The last line of code should be **app.Run();**
 
-#### Code Breakdown
+### Code Breakdown
 
-Lets break the source code for better understanding:
+Let's break down the source code for better understanding:
 
-1. Create Event
+#### 1. Create Event
 
 ```csharp
 //create an event
@@ -439,25 +444,25 @@ app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
     });
 ```
 
-This route handles HTTP **POST**  requests sent to ***/event***. Its purpose is to **create and save a new event** in the in-memory database
+This route handles HTTP **POST** requests sent to ***/event***. Its purpose is to **create and save a new event** in the in-memory database.
 
-| code                                                      | col2Explanation                                                                                                                                          |
+| Code | Explanation |
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| app.MapPost("/event")                                     | /event is the path where the clients send the event data                                                                                                 |
-| (Event newEvent, AppDbContext db)                         | Two parameters are injected: the event data from the request body i.e postman or REST Client (newEvent) and AppDbContext from the service container (db) |
-| db.Events.Add(newEvent)                                   | Adds the new event to the in-memory database's Events Collection                                                                                         |
-| await db.SaveChangesAsync();                              | Saves changes to the database asynchronously (non-blocking).                                                                                             |
-| return Results.Created($"/event/{newEvent.Id}", newEvent) | Returns an HTTP 201 Created response with the newly created event and its URL.                                                                           |
+| `app.MapPost("/event")` | `/event` is the path where the clients send the event data |
+| `(Event newEvent, AppDbContext db)` | Two parameters are injected: the event data from the request body i.e., Postman or REST Client (newEvent) and AppDbContext from the service container (db) |
+| `db.Events.Add(newEvent)` | Adds the new event to the in-memory database's Events Collection |
+| `await db.SaveChangesAsync();` | Saves changes to the database asynchronously (non-blocking) |
+| `return Results.Created($"/event/{newEvent.Id}", newEvent)` | Returns an HTTP 201 Created response with the newly created event and its URL |
 
-**Tests with REST CLIENT**
+##### Testing with REST Client
 
-The scafolded projects comes with REST CLIENT which is used to test the endpoints of the application.
+The scaffolded project comes with REST Client which is used to test the endpoints of the application.
 
 To generate the endpoints without needing to do them manually:
 
-hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
-
-It will give you all the available endpoints. Just right click on the `POST `request and generate the request.
+1. Hold `Ctrl + Q` on your keyboard and search for "Endpoint Explorer"
+2. It will give you all the available endpoints
+3. Right-click on the `POST` request and generate the request
 
 On the generated endpoint, add the following data for testing:
 
@@ -473,8 +478,7 @@ On the generated endpoint, add the following data for testing:
 
 ![1753693728505](image/Readme/1753693728505.png)
 
-
-Get All Events
+#### 2. Get All Events
 
 ```csharp
 //get all events
@@ -484,27 +488,27 @@ app.MapGet("/events", async(AppDbContext db) =>
 
 **What This Does:**
 
-This route handles HTTP GET requests sent to /events. It retrieves **a list of all events** stored in the in-memory database.
+This route handles HTTP GET requests sent to `/events`. It retrieves **a list of all events** stored in the in-memory database.
 
-| code                          | Explanation                                                                                |
+| Code | Explanation |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| app.MapGet("/events")         | route to the path /events                                                                  |
-| AppDbContext db               | Injects AppDbContext via dependancy injection to interact with the database                |
-| await db.Events.ToListAsync() | Asynchronously fetches all event records from the Events table and returns then as a list. |
+| `app.MapGet("/events")` | Route to the path `/events` |
+| `AppDbContext db` | Injects AppDbContext via dependency injection to interact with the database |
+| `await db.Events.ToListAsync()` | Asynchronously fetches all event records from the Events table and returns them as a list |
 
-**Tests with REST CLIENT**
+##### Testing with REST Client
 
-hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
+1. Hold `Ctrl + Q` on your keyboard and search for "Endpoint Explorer"
+2. It will give you all the available endpoints
+3. Right-click on the `GET` request and generate the request
 
-It will give you all the available endpoints. Just right click on the `GET `request and generate the request.
-
-On the generated endpoint,add the a valid endpoint
+On the generated endpoint, add a valid endpoint:
 
 ```http
 GET {{0.EventApi_HostAddress}}/events
 ```
 
-Get an Event by Id
+#### 3. Get an Event by ID
 
 ```csharp
 //get event by id
@@ -526,11 +530,11 @@ This route handles HTTP GET requests sent to /event/{id} . It looks up a single 
 | await db.Events.FindAsync(id)                              | Looks for the event with the matching id in the database. Returns null if not found.                        |
 | is Event @event ? Results.Ok(@event) : Results.NotFound()) | If the event exists, returns a 200 OK response with the event. If it doesn’t, returns 404 Not Found.       |
 
-**Test with REST CLIENT**
+##### Testing with REST Client (Get by ID)
 
-hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
-
-It will give you all the available endpoints. Just right click on the `GET{id} `request and generate the request.
+1. Hold `Ctrl + Q` on your keyboard and search for "Endpoint Explorer"
+2. It will give you all the available endpoints
+3. Right-click on the `GET{id}` request and generate the request
 
 On the generated endpoint, add a valid id
 
@@ -538,7 +542,7 @@ On the generated endpoint, add a valid id
 GET {{0.EventApi_HostAddress}}/event/4
 ```
 
-Update an Event
+#### 4. Update an Event
 
 ```csharp
 //update an event
@@ -559,30 +563,29 @@ app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
 });
 ```
 
-**What This D**oes:
+**What This Does:**
 
 This route handles HTTP PUT requests to update an existing event in the database. The client provides an updated version of the event, and if the event exists, its values are modified and saved.
 
-| code                                              | explanation                                                                                                                                                            |
+| Code | Explanation |
 | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| MapPut("event/{id}")                              | Sets up a PUT route for updating an event by ID.                                                                                                                       |
-| (int id, Event inputEvent, AppDbContext db)       | The route handler receives the event**id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection** |
-| await db.Events.FindAsync(id)                     | Tries to find the event in the database using the provided `id`                                                                                                      |
-| if (@event is null) return Results.NotFound()     | If no event is found, it returns a 404 Not Found response.                                                                                                             |
-| @event.Title = inputEvent.Title .....and the rest | Updates each field of the found event with the new values provided.                                                                                                    |
-| await db.SaveChangesAsync()                       | Commits the changes to the database.                                                                                                                                   |
-| return Results.NoContent()                        | Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body.                                                    |
+| `MapPut("event/{id}")` | Sets up a PUT route for updating an event by ID |
+| `(int id, Event inputEvent, AppDbContext db)` | The route handler receives the event **id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection** |
+| `await db.Events.FindAsync(id)` | Tries to find the event in the database using the provided `id` |
+| `if (@event is null) return Results.NotFound()` | If no event is found, it returns a 404 Not Found response |
+| `@event.Title = inputEvent.Title` ...and the rest | Updates each field of the found event with the new values provided |
+| `await db.SaveChangesAsync()` | Commits the changes to the database |
+| `return Results.NoContent()` | Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body |
 
-**Tests with REST CLIENT**
+##### Testing with REST Client (Update)
 
-hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
-
-It will give you all the available endpoints. Just right click on the `UPDATE `request and generate the request.
+1. Hold `Ctrl + Q` on your keyboard and search for "Endpoint Explorer"
+2. It will give you all the available endpoints
+3. Right-click on the `UPDATE` request and generate the request
 
 On the generated endpoint, add the following data for testing:
 
 ```json
-
 {
   "id": 1,
   "title": "Annual Meetup - Updated",
@@ -593,8 +596,7 @@ On the generated endpoint, add the following data for testing:
 }
 ```
 
-
-Delete an Event
+#### 5. Delete an Event
 
 ```csharp
 //delete an event
@@ -618,28 +620,28 @@ app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
 
 This endpoint handles HTTP `DELETE` requests to remove an event from the database by its ID. It first checks if the event exists and deletes it if found.
 
-| code                                                    | Explanations                                                                                                |
+| Code | Explanation |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| app.MapDelete("/event/{id}")                            | Sets up a `DELETE` route for removing an event by ID.                                                     |
-| (int id, AppDbContext db)                               | The handler receives the event**id** from the URL and uses the injected database context **db** |
-| if (await db.Events.FindAsync(id) is null)              | Checks if the event exists. If not, returns `404 Not Found`.                                              |
-| else if (await db.Events.FindAsync(id) is Event @event) | Retrieves the event again and stores it in `@event`.                                                      |
-| db.Remove(@event)                                       | Marks the event for deletion.                                                                               |
-| await db.SaveChangesAsync()                             | Commits the deletion to the database.                                                                       |
-| return Results.NoContent()                              | Returns a `204 No Content` response indicating successful deletion.                                       |
+| `app.MapDelete("/event/{id}")` | Sets up a `DELETE` route for removing an event by ID |
+| `(int id, AppDbContext db)` | The handler receives the event **id** from the URL and uses the injected database context **db** |
+| `if (await db.Events.FindAsync(id) is null)` | Checks if the event exists. If not, returns `404 Not Found` |
+| `else if (await db.Events.FindAsync(id) is Event @event)` | Retrieves the event again and stores it in `@event` |
+| `db.Remove(@event)` | Marks the event for deletion |
+| `await db.SaveChangesAsync()` | Commits the deletion to the database |
+| `return Results.NoContent()` | Returns a `204 No Content` response indicating successful deletion |
 
-**Test with REST CLIENT**
+##### Testing with REST Client (Delete)
 
-hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
+1. Hold `Ctrl + Q` on your keyboard and search for "Endpoint Explorer"
+2. It will give you all the available endpoints
+3. Right-click on the `DELETE` request and generate the request
 
-It will give you all the available endpoints. Just right click on the `DELETE` request and generate the request.
-
-On the generated endpoint, add a valid id
+On the generated endpoint, add a valid id:
 
 ```http
 DELETE {{0.EventApi_HostAddress}}/event/5
 ```
 
-## step 6: MapGroup
+## Step 6: MapGroup
 
-👉 Next, we will learn about TypedResults APi to help us handle different responses of our system.
+👉 Next, we will learn about TypedResults API to help us handle different responses of our system.
