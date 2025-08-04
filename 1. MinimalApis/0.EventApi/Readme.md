@@ -498,9 +498,9 @@ hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
 
 It will give you all the available endpoints. Just right click on the `GET `request and generate the request.
 
-On the generated endpoint, add the following data for testing:
+On the generated endpoint,add the a valid endpoint
 
-```json
+```http
 GET {{0.EventApi_HostAddress}}/events
 ```
 
@@ -532,9 +532,9 @@ hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
 
 It will give you all the available endpoints. Just right click on the `GET{id} `request and generate the request.
 
-On the generated endpoint, add the following data for testing:
+On the generated endpoint, add a valid id
 
-```json
+```http
 GET {{0.EventApi_HostAddress}}/event/4
 ```
 
@@ -582,8 +582,6 @@ It will give you all the available endpoints. Just right click on the `UPDATE `r
 On the generated endpoint, add the following data for testing:
 
 ```json
-PUT {{0.EventApi_HostAddress}}/event/3
-Content-Type: application/json
 
 {
   "id": 1,
@@ -636,9 +634,9 @@ hold on `Ctr +  Q` on your keyboard and search Endpoint Explorer
 
 It will give you all the available endpoints. Just right click on the `DELETE` request and generate the request.
 
-On the generated endpoint, add the following data for testing:
+On the generated endpoint, add a valid id
 
-```json
+```http
 DELETE {{0.EventApi_HostAddress}}/event/5
 ```
 
