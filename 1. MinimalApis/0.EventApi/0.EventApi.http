@@ -1,6 +1,5 @@
 ﻿@0.EventApi_HostAddress = https://localhost:5000
 
-### Create an event
 POST {{0.EventApi_HostAddress}}/event
 Content-Type: application/json
 
@@ -11,30 +10,5 @@ Content-Type: application/json
   "endTime": "2025-09-10T17:00:00",
   "capacity": 150
 }
-
-### Get All Events
-
-GET {{0.EventApi_HostAddress}}/events
-
-### Update An event
-
-PUT {{0.EventApi_HostAddress}}/event/3
-Content-Type: application/json
-
-{
-  "id": 1,
-  "title": "Annual Meetup - Updated",
-  "description": "Networking, and workshops",
-  "startTime": "2025-09-10T09:00:00",
-  "endTime": "2025-09-10T18:00:00",
-  "capacity": 245
-}
-### Get event by Id
-
-GET {{0.EventApi_HostAddress}}/event/4
-
-### Delete an Event
-
-DELETE {{0.EventApi_HostAddress}}/event/5
 
 ###

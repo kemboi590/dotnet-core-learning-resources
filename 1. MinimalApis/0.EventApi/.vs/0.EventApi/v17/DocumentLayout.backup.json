@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{488855E4-7656-4CB3-99F6-FDDDB6373A10}|0.EventApi.csproj|d:\\my classes\\15. dotnet\\1. minimalapis\\0.eventapi\\readme.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}",
+      "RelativeMoniker": "D:0:0:{488855E4-7656-4CB3-99F6-FDDDB6373A10}|0.EventApi.csproj|solutionrelative:readme.md||{24510B54-A648-4D69-A6C5-F68CBDF07546}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{488855E4-7656-4CB3-99F6-FDDDB6373A10}|0.EventApi.csproj|d:\\my classes\\15. dotnet\\1. minimalapis\\0.eventapi\\0.eventapi.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{488855E4-7656-4CB3-99F6-FDDDB6373A10}|0.EventApi.csproj|solutionrelative:0.eventapi.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
@@ -30,7 +34,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -44,32 +48,44 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Readme.md",
+              "DocumentMoniker": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Readme.md",
+              "RelativeDocumentMoniker": "Readme.md",
+              "ToolTip": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Readme.md",
+              "RelativeToolTip": "Readme.md",
+              "ViewState": "AgIAANQBAAAAAAAAAAAAAPwBAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-07-25T09:06:46.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "0.EventApi.http",
               "DocumentMoniker": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\0.EventApi.http",
               "RelativeDocumentMoniker": "0.EventApi.http",
-              "ToolTip": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\0.EventApi.http*",
-              "RelativeToolTip": "0.EventApi.http*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAADAAAAAAAAAA==",
+              "ToolTip": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\0.EventApi.http",
+              "RelativeToolTip": "0.EventApi.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2025-07-25T08:27:31.05Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Event.cs",
               "DocumentMoniker": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Models\\Event.cs",
               "RelativeDocumentMoniker": "Models\\Event.cs",
-              "ToolTip": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Models\\Event.cs*",
-              "RelativeToolTip": "Models\\Event.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAWAAAAAAAAAA==",
+              "ToolTip": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Models\\Event.cs",
+              "RelativeToolTip": "Models\\Event.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-25T08:15:16.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-25T08:15:16.436Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\My Classes\\15. Dotnet\\1. MinimalApis\\0.EventApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -77,8 +93,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-22T09:47:01.46Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-22T09:47:01.46Z"
             }
           ]
         }

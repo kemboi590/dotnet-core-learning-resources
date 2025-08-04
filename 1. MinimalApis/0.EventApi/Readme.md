@@ -363,7 +363,7 @@ public class EventsController : ControllerBase
 
 ## step 5: CRUD Operations For Rest API
 
-We shall now proceed to write CRUD operations for an Event API. The aim is to have to Create, Read, Update and Delete. Once we have these foundations it will be much easier to grasp more concepts. 
+We shall now proceed to write CRUD operations for an Event API. The aim is to have to Create, Read, Update and Delete. Once we have these foundations it will be much easier to grasp more concepts.
 
 Just after **builder.Build();** you should have the following source code.
 
@@ -459,6 +459,30 @@ Saves changes to the database asynchronously (non-blocking).
 
 Returns an HTTP 201 Created response with the newly created event and its URL.
 
+**Tests with REST CLIENT**
+
+The scafolded projects comes with REST CLIENT which is used to toest the endpoints of the application.
+
+To generate the endpoints without needing to do them manually:
+
+hold on Ctr +  Q on your keyboard and search Endoint Explorer
+
+It will give you all the available endpoints. Just right click on the POST request and generate the request.
+
+```json
+{
+  "title": "JS hackathon",
+  "description": "Networking and talks",
+  "startTime": "2025-09-10T09:00:00",
+  "endTime": "2025-09-10T17:00:00",
+  "capacity": 150
+}
+```
+
+![1753693728505](image/Readme/1753693728505.png)
+
+On the generated endpoint, add the following data for testing:
+
 Get All Events
 
 ```csharp
@@ -467,6 +491,15 @@ app.MapGet("/events", async(AppDbContext db) =>
     await db.Events.ToListAsync());
 ```
 
+**What This Does:**
+
+This route handles HTTP GET requests sent to /events. It retrieves **a list of all events** stored in the in-memory database.
+
+MapGet route to the path /events
+
+AppDbContext db - Injects AppDbContext via dependancy injection to interact with the database
+
+await db.Events.ToListAsync() - Asynchronously fetches all event records from the Events table and returns then as a list.
 
 
 Get an Event by Id
@@ -480,6 +513,17 @@ is Event @event
 : Results.NotFound());
 ```
 
+**What This Does:**
+
+This route handles HTTP GET requests sent to /event/{id} . It looks up a single event using the provided **id** from the database. If the event exists, it returns the event data; if not, it returns a "Not Found" response.
+
+MapGet - route a GET with dynamic id in the url path i.e /event/3
+
+(int id, AppDbContext db) - The route handler takes the id from the URL and uses **Dependency Injection** to get the AppDbContext.
+
+await db.Events.FindAsync(id) - Looks for the event with the matching id in the database. Returns null if not found.
+
+is Event @event ? Results.Ok(@event) : Results.NotFound()) - If the event exists, returns a 200 OK response with the event. If it doesn’t, returns 404 Not Found.
 
 Update an Event
 
@@ -502,6 +546,33 @@ app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
 });
 ```
 
+**What This D**oes:
+
+This route handles HTTP PUT requests to update an existing event in the database. The client provides an updated version of the event, and if the event exists, its values are modified and saved.
+
+| code                                              | explanation                                                                                                                                                            |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MapPut("event/{id}")                              | Sets up a PUT route for updating an event by ID.                                                                                                                       |
+| (int id, Event inputEvent, AppDbContext db)       | The route handler receives the event**id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection** |
+| await db.Events.FindAsync(id)                     | Tries to find the event in the database using the provided `id`                                                                                                      |
+| if (@event is null) return Results.NotFound()     | If no event is found, it returns a 404 Not Found response.                                                                                                             |
+| @event.Title = inputEvent.Title .....and the rest | Updates each field of the found event with the new values provided.                                                                                                    |
+| await db.SaveChangesAsync()                       | Commits the changes to the database.                                                                                                                                   |
+| return Results.NoContent()                        | Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body.                                                    |
+
+MapPut("event/{id}") - Sets up a PUT route for updating an event by ID.
+
+(int id, Event inputEvent, AppDbContext db) - The route handler receives the event **id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection**
+
+await db.Events.FindAsync(id) - Tries to find the event in the database using the provided `id`
+
+if (@event is null) return Results.NotFound() - If no event is found, it returns a 404 Not Found response.
+
+@event.Title = inputEvent.Title .....and the rest - Updates each field of the found event with the new values provided.
+
+await db.SaveChangesAsync() - Commits the changes to the database.
+return Results.NoContent() - Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body.
+
 Delete an Event
 
 ```csharp
@@ -521,7 +592,6 @@ app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
     return Results.NoContent();
 });
 ```
-
 
 ## step 6: MapGroup
 
