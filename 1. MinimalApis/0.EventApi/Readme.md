@@ -80,17 +80,14 @@ This is the entry point of the application. Let's break it down:
 
    - Used to create a ***WebApplicationBuilder*** instance
    - It configures services, logging, environment, and app settings
-
 2. **var app = builder.Build();**
 
    - This builds the application
    - Creates a ***WebApplication*** instance, making the app ready to define endpoints and middlewares
-
 3. **app.MapGet("/", () => "Hello World!");**
 
    - This is where you **define your first API endpoint**. Whenever you visit the endpoint, it returns "Hello World".
    - **() => "Hello World!"** - this is a lambda function that returns a string. Lambda is a concept in C#.
-
 4. **app.Run();**
 
    - This **starts the web server**.
@@ -272,13 +269,13 @@ The `AppDbContext` class is a central part of Entity Framework Core (EF Core). I
 - Maps your models (e.g., `Event`) to database tables
 - Enables querying and saving of data
 
-| Term | Description |
+| Term                                                      | Description                                                                                      |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| DbContext | Base class provided by EF Core. It handles database operations and change tracking. |
-| AppDbContext | Our custom context class inheriting from `DbContext`. We define models here as `DbSet<>`. |
-| AppDbContext(DbContextOptions `<AppDbContext>` options) | Constructor used to configure the context with settings like the connection string. |
-| DbSet `<Event>` Events | Represents the `Events` table in the database. You use this to access and query event records. |
-| Set `<Event>`() | Built-in EF Core method that initializes the `DbSet` for a given model type. |
+| DbContext                                                 | Base class provided by EF Core. It handles database operations and change tracking.              |
+| AppDbContext                                              | Our custom context class inheriting from `DbContext`. We define models here as `DbSet<>`.    |
+| AppDbContext(DbContextOptions `<AppDbContext>` options) | Constructor used to configure the context with settings like the connection string.              |
+| DbSet `<Event>` Events                                  | Represents the `Events` table in the database. You use this to access and query event records. |
+| Set `<Event>`()                                         | Built-in EF Core method that initializes the `DbSet` for a given model type.                   |
 
 #### Step 4: Register the Context in ***Program.cs***
 
@@ -289,7 +286,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDataba
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 ```
 
-![1753177840347](image/Readme/1753177840347.png)
+![1753261665694](image/Readme/1753261665694.png)
 
 The first line registers the `AppDbContext` with the application's **dependency injection (DI) container** and configures it to use an **in-memory database** called `"EventDb"`.
 
@@ -304,7 +301,6 @@ This usage is possible because it is made available by the Microsoft.AspNetCore.
 ### **DbContext Flow**
 
 ![1753188933730](image/Readme/1753188933730.png)
-
 
 ## Concept of dependency injection (DI)
 
@@ -323,11 +319,8 @@ If a class needs a tool (like a hammer), instead of building the hammer itself, 
 **How it works in .NET Core**
 
 - ASP .NET Core has built-in DI Container. Just the same way we registered the DbContext, the DI tells the system "When someone asks for an `AppDbContext`, here’s how to create it."
-
 - Later, when your app needs that `AppDbContext` in a class (e.g., a controller or service), you don’t create it manually — the system  **automatically injects it for you** .
-
 - An example is registering AppDbContext with the InMemory Database. It will register **AppDbContext** as a service. It then tells the system to use in-memory database when creating AppDbContext.
-
 - Later when we shall be creating a class, here how the DI is injected.
 
 ```csharp
@@ -351,13 +344,13 @@ public class EventsController : ControllerBase
 
 ### Terms to Remember
 
-| Term | Meaning |
+| Term              | Meaning                                                         |
 | ----------------- | --------------------------------------------------------------- |
-| Dependency | An object a class depends on (e.g., `AppDbContext`) |
-| Injection | Supplying the dependency from outside |
+| Dependency        | An object a class depends on (e.g.,`AppDbContext`)            |
+| Injection         | Supplying the dependency from outside                           |
 | Service Container | Built-in system in .NET Core that holds all registered services |
-| Register | Telling the container how to create a dependency |
-| Resolve | The container gives you the dependency when needed |
+| Register          | Telling the container how to create a dependency                |
+| Resolve           | The container gives you the dependency when needed              |
 
 ### Summary
 
@@ -368,7 +361,167 @@ public class EventsController : ControllerBase
 - In-memory database is used for testing and learning as it acts as a fake database stored in memory (RAM), so no actual SQL server is needed
 - When Program.cs registers AppDbContext, you can inject it in any part of your application. We will explore this when we write CRUD operations of our Minimal API
 
-## step 5: CRUD Operations FOR rest API
+## step 5: CRUD Operations For Rest API
+
+We shall now proceed to write CRUD operations for an Event API. The aim is to have to Create, Read, Update and Delete. Once we have these foundations it will be much easier to grasp more concepts. 
+
+Just after **builder.Build();** you should have the following source code.
+
+```csharp
+//create an event
+app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
+    {
+        db.Events.Add(newEvent);
+        await db.SaveChangesAsync();
+        return Results.Created($"/event/{newEvent.Id}", newEvent);
+    });
+
+//get all events
+app.MapGet("/events", async(AppDbContext db) =>
+    await db.Events.ToListAsync());
+
+//get event by id
+app.MapGet("/event/{id}", async (int id, AppDbContext db) =>
+await db.Events.FindAsync(id)
+is Event @event
+? Results.Ok(@event)
+: Results.NotFound());
+
+//update an event
+app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
+{
+    var @event = await db.Events.FindAsync(id);
+
+    if (@event is null) return Results.NotFound();
+
+    @event.Title = inputEvent.Title;
+    @event.Description = inputEvent.Description;
+    @event.Capacity = inputEvent.Capacity;
+    @event.StartTime = inputEvent.StartTime;
+    @event.EndTime = inputEvent.EndTime;
+
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+//delete an event
+app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
+{
+    if (await db.Events.FindAsync(id) is null)
+    {
+        return Results.NotFound();
+    }
+    else if (await db.Events.FindAsync(id) is Event @event)
+    {
+        db.Remove(@event);
+        await db.SaveChangesAsync();
+        return Results.NoContent();
+    }
+    return Results.NoContent();
+});
+```
+
+The last line of code should be **app.Run();**
+
+Lets break the source code for better understanding:
+
+1. Create Event
+
+```csharp
+//create an event
+app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
+    {
+        db.Events.Add(newEvent);
+        await db.SaveChangesAsync();
+        return Results.Created($"/event/{newEvent.Id}", newEvent);
+    });
+```
+
+This route handles HTTP **POST**  requests sent to ***/event***. Its purpose is to **create and save a new event** in the in-memory database
+
+**app.MapPost("/event", ...)**
+
+/event is the path where the clients send the event data
+
+**(Event newEvent, AppDbContext db)**
+
+Two parameters are injected: the event data from the request body i.e postman or REST Client (newEvent) and AppDbContext from the service container (db)
+
+**db.Events.Add(newEvent);**
+
+Adds the new event to the in-memory database's Events Collection
+
+**await db.SaveChangesAsync();**
+
+Saves changes to the database asynchronously (non-blocking).
+
+**return Results.Created($"/event/{newEvent.Id}", newEvent);**
+
+Returns an HTTP 201 Created response with the newly created event and its URL.
+
+Get All Events
+
+```csharp
+//get all events
+app.MapGet("/events", async(AppDbContext db) =>
+    await db.Events.ToListAsync());
+```
+
+
+
+Get an Event by Id
+
+```csharp
+//get event by id
+app.MapGet("/event/{id}", async (int id, AppDbContext db) =>
+await db.Events.FindAsync(id)
+is Event @event
+? Results.Ok(@event)
+: Results.NotFound());
+```
+
+
+Update an Event
+
+```csharp
+//update an event
+app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
+{
+    var @event = await db.Events.FindAsync(id);
+
+    if (@event is null) return Results.NotFound();
+
+    @event.Title = inputEvent.Title;
+    @event.Description = inputEvent.Description;
+    @event.Capacity = inputEvent.Capacity;
+    @event.StartTime = inputEvent.StartTime;
+    @event.EndTime = inputEvent.EndTime;
+
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+```
+
+Delete an Event
+
+```csharp
+//delete an event
+app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
+{
+    if (await db.Events.FindAsync(id) is null)
+    {
+        return Results.NotFound();
+    }
+    else if (await db.Events.FindAsync(id) is Event @event)
+    {
+        db.Remove(@event);
+        await db.SaveChangesAsync();
+        return Results.NoContent();
+    }
+    return Results.NoContent();
+});
+```
+
 
 ## step 6: MapGroup
 
