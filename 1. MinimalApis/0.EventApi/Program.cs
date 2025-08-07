@@ -9,8 +9,11 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
+//MapGroup API
+var events = app.MapGroup("/events");
+
 //create an event
-app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
+events.MapPost("/", async (Event newEvent, AppDbContext db) =>
     {
         db.Events.Add(newEvent);
         await db.SaveChangesAsync();
@@ -18,18 +21,18 @@ app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
     });
 
 //get all events
-app.MapGet("/events", async(AppDbContext db) =>
+events.MapGet("/", async(AppDbContext db) =>
     await db.Events.ToListAsync());
 
 //get event by id
-app.MapGet("/event/{id}", async (int id, AppDbContext db) =>
+events.MapGet("/{id}", async (int id, AppDbContext db) =>
 await db.Events.FindAsync(id)
 is Event @event
 ? Results.Ok(@event)
 : Results.NotFound());
 
 //update an event
-app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
+events.MapPut("/{id}", async (int id, Event inputEvent, AppDbContext db) =>
 {
     var @event = await db.Events.FindAsync(id);
 
@@ -46,7 +49,7 @@ app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
 });
 
 //delete an event
-app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
+events.MapDelete("/{id}", async (int id, AppDbContext db) =>
 {
     if (await db.Events.FindAsync(id) is null)
     {

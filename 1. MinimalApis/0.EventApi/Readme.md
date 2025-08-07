@@ -446,13 +446,13 @@ app.MapPost("/event", async (Event newEvent, AppDbContext db) =>
 
 This route handles HTTP **POST** requests sent to ***/event***. Its purpose is to **create and save a new event** in the in-memory database.
 
-| Code | Explanation |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app.MapPost("/event")` | `/event` is the path where the clients send the event data |
-| `(Event newEvent, AppDbContext db)` | Two parameters are injected: the event data from the request body i.e., Postman or REST Client (newEvent) and AppDbContext from the service container (db) |
-| `db.Events.Add(newEvent)` | Adds the new event to the in-memory database's Events Collection |
-| `await db.SaveChangesAsync();` | Saves changes to the database asynchronously (non-blocking) |
-| `return Results.Created($"/event/{newEvent.Id}", newEvent)` | Returns an HTTP 201 Created response with the newly created event and its URL |
+| Code                                                          | Explanation                                                                                                                                                |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app.MapPost("/event")`                                     | `/event` is the path where the clients send the event data                                                                                               |
+| `(Event newEvent, AppDbContext db)`                         | Two parameters are injected: the event data from the request body i.e., Postman or REST Client (newEvent) and AppDbContext from the service container (db) |
+| `db.Events.Add(newEvent)`                                   | Adds the new event to the in-memory database's Events Collection                                                                                           |
+| `await db.SaveChangesAsync();`                              | Saves changes to the database asynchronously (non-blocking)                                                                                                |
+| `return Results.Created($"/event/{newEvent.Id}", newEvent)` | Returns an HTTP 201 Created response with the newly created event and its URL                                                                              |
 
 ##### Testing with REST Client
 
@@ -490,10 +490,10 @@ app.MapGet("/events", async(AppDbContext db) =>
 
 This route handles HTTP GET requests sent to `/events`. It retrieves **a list of all events** stored in the in-memory database.
 
-| Code | Explanation |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `app.MapGet("/events")` | Route to the path `/events` |
-| `AppDbContext db` | Injects AppDbContext via dependency injection to interact with the database |
+| Code                              | Explanation                                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------------------- |
+| `app.MapGet("/events")`         | Route to the path `/events`                                                             |
+| `AppDbContext db`               | Injects AppDbContext via dependency injection to interact with the database               |
 | `await db.Events.ToListAsync()` | Asynchronously fetches all event records from the Events table and returns them as a list |
 
 ##### Testing with REST Client
@@ -567,15 +567,15 @@ app.MapPut("/event/{id}", async (int id, Event inputEvent, AppDbContext db) =>
 
 This route handles HTTP PUT requests to update an existing event in the database. The client provides an updated version of the event, and if the event exists, its values are modified and saved.
 
-| Code | Explanation |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `MapPut("event/{id}")` | Sets up a PUT route for updating an event by ID |
-| `(int id, Event inputEvent, AppDbContext db)` | The route handler receives the event **id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection** |
-| `await db.Events.FindAsync(id)` | Tries to find the event in the database using the provided `id` |
-| `if (@event is null) return Results.NotFound()` | If no event is found, it returns a 404 Not Found response |
-| `@event.Title = inputEvent.Title` ...and the rest | Updates each field of the found event with the new values provided |
-| `await db.SaveChangesAsync()` | Commits the changes to the database |
-| `return Results.NoContent()` | Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body |
+| Code                                                | Explanation                                                                                                                                                            |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MapPut("event/{id}")`                            | Sets up a PUT route for updating an event by ID                                                                                                                        |
+| `(int id, Event inputEvent, AppDbContext db)`     | The route handler receives the event**id** from the URL, the updated event data from the request body, and a database context via **Dependency Injection** |
+| `await db.Events.FindAsync(id)`                   | Tries to find the event in the database using the provided `id`                                                                                                      |
+| `if (@event is null) return Results.NotFound()`   | If no event is found, it returns a 404 Not Found response                                                                                                              |
+| `@event.Title = inputEvent.Title` ...and the rest | Updates each field of the found event with the new values provided                                                                                                     |
+| `await db.SaveChangesAsync()`                     | Commits the changes to the database                                                                                                                                    |
+| `return Results.NoContent()`                      | Returns a 204 No Content response to indicate the update was successful, but there's nothing to return in the body                                                     |
 
 ##### Testing with REST Client (Update)
 
@@ -620,15 +620,15 @@ app.MapDelete("/event/{id}", async (int id, AppDbContext db) =>
 
 This endpoint handles HTTP `DELETE` requests to remove an event from the database by its ID. It first checks if the event exists and deletes it if found.
 
-| Code | Explanation |
-| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `app.MapDelete("/event/{id}")` | Sets up a `DELETE` route for removing an event by ID |
-| `(int id, AppDbContext db)` | The handler receives the event **id** from the URL and uses the injected database context **db** |
-| `if (await db.Events.FindAsync(id) is null)` | Checks if the event exists. If not, returns `404 Not Found` |
-| `else if (await db.Events.FindAsync(id) is Event @event)` | Retrieves the event again and stores it in `@event` |
-| `db.Remove(@event)` | Marks the event for deletion |
-| `await db.SaveChangesAsync()` | Commits the deletion to the database |
-| `return Results.NoContent()` | Returns a `204 No Content` response indicating successful deletion |
+| Code                                                        | Explanation                                                                                                 |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `app.MapDelete("/event/{id}")`                            | Sets up a `DELETE` route for removing an event by ID                                                      |
+| `(int id, AppDbContext db)`                               | The handler receives the event**id** from the URL and uses the injected database context **db** |
+| `if (await db.Events.FindAsync(id) is null)`              | Checks if the event exists. If not, returns `404 Not Found`                                               |
+| `else if (await db.Events.FindAsync(id) is Event @event)` | Retrieves the event again and stores it in `@event`                                                       |
+| `db.Remove(@event)`                                       | Marks the event for deletion                                                                                |
+| `await db.SaveChangesAsync()`                             | Commits the deletion to the database                                                                        |
+| `return Results.NoContent()`                              | Returns a `204 No Content` response indicating successful deletion                                        |
 
 ##### Testing with REST Client (Delete)
 
@@ -642,6 +642,88 @@ On the generated endpoint, add a valid id:
 DELETE {{0.EventApi_HostAddress}}/event/5
 ```
 
-## Step 6: MapGroup
+## Step 6: MapGroup API
+
+You will realize that events URL prefix repeats itself. That is what we should fix with MapGroup method which help us to organize such groups to avoid it being repeated.
+
+Replace Program.cs with the following:
+
+```csharp
+using _0.EventApi.Models;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("EventDb"));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+var app = builder.Build();
+
+//MapGroup API
+var events = app.MapGroup("/events");
+
+//create an event
+events.MapPost("/", async (Event newEvent, AppDbContext db) =>
+    {
+        db.Events.Add(newEvent);
+        await db.SaveChangesAsync();
+        return Results.Created($"/event/{newEvent.Id}", newEvent);
+    });
+
+//get all events
+events.MapGet("/", async(AppDbContext db) =>
+    await db.Events.ToListAsync());
+
+//get event by id
+events.MapGet("/{id}", async (int id, AppDbContext db) =>
+await db.Events.FindAsync(id)
+is Event @event
+? Results.Ok(@event)
+: Results.NotFound());
+
+//update an event
+events.MapPut("/{id}", async (int id, Event inputEvent, AppDbContext db) =>
+{
+    var @event = await db.Events.FindAsync(id);
+
+    if (@event is null) return Results.NotFound();
+
+    @event.Title = inputEvent.Title;
+    @event.Description = inputEvent.Description;
+    @event.Capacity = inputEvent.Capacity;
+    @event.StartTime = inputEvent.StartTime;
+    @event.EndTime = inputEvent.EndTime;
+
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+//delete an event
+events.MapDelete("/{id}", async (int id, AppDbContext db) =>
+{
+    if (await db.Events.FindAsync(id) is null)
+    {
+        return Results.NotFound();
+    }
+    else if (await db.Events.FindAsync(id) is Event @event)
+    {
+        db.Remove(@event);
+        await db.SaveChangesAsync();
+        return Results.NoContent();
+    }
+    return Results.NoContent();
+});
+
+
+app.Run();
+
+```
+
+**Breakdown**:
+
+- var events = app.MapGroup("/events"); - to set up the group using the URL prefix `/events`.
+
+- Changes all the `app.Map<HttpVerb>` methods to `todoItems.Map<HttpVerb>`.
 
 👉 Next, we will learn about TypedResults API to help us handle different responses of our system.
