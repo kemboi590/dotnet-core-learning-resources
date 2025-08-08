@@ -1,0 +1,42 @@
+﻿@3.DTOs_HostAddress = https://localhost:7064
+
+POST {{3.DTOs_HostAddress}}/events
+Content-Type: application/json
+
+{
+  "title": "JS hackathon",
+  "description": "Networking and talks",
+  "startTime": "2025-09-10T09:00:00",
+  "endTime": "2025-09-10T17:00:00",
+  "capacity": 150,
+  "promoCode": "promo321"
+}
+
+###
+
+GET {{3.DTOs_HostAddress}}/events
+
+###
+
+
+GET {{3.DTOs_HostAddress}}/events/1
+
+###
+
+PUT {{3.DTOs_HostAddress}}/events/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Annual Meetup - Updated",
+  "description": "Networking, and workshops",
+  "startTime": "2025-09-10T09:00:00",
+  "endTime": "2025-09-10T18:00:00",
+  "capacity": 245
+} 
+
+###
+
+DELETE {{3.DTOs_HostAddress}}/events/2
+
+###
