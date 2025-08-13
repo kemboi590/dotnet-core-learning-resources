@@ -1,8 +1,8 @@
-﻿@3.DTOs_HostAddress = https://localhost:7064
+﻿@_4.DbConnect_HostAddress = https://localhost:5294
 
 
 
-POST {{3.DTOs_HostAddress}}/events
+POST {{_4.DbConnect_HostAddress}}/events
 Content-Type: application/json
 
 {
@@ -16,20 +16,7 @@ Content-Type: application/json
 
 ###
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-GET {{3.DTOs_HostAddress}}/events
+GET {{_4.DbConnect_HostAddress}}/events
 
 ###
 
@@ -53,11 +40,11 @@ GET {{3.DTOs_HostAddress}}/events
 
 
 
-GET {{3.DTOs_HostAddress}}/events/1
+GET {{_4.DbConnect_HostAddress}}/events/1
 
 ###
 
-PUT {{3.DTOs_HostAddress}}/events/1
+PUT {{_4.DbConnect_HostAddress}}/events/1
 Content-Type: application/json
 
 {
@@ -71,6 +58,6 @@ Content-Type: application/json
 
 ###
 
-DELETE {{3.DTOs_HostAddress}}/events/2
+DELETE {{_4.DbConnect_HostAddress}}/events/2
 
 ###
